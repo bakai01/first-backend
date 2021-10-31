@@ -6,56 +6,37 @@ class PostService {
     return createdPost;
   }
 
-  // async getAll(req, res) {
-  //   try {
-  //     const posts = await Post.find();
-  //     return res.json(posts);
-  //   } catch (error) {
-  //     res.status(500).json(error.message);
-  //   }
-  // }
+  async getAll() {
+    const posts = await post.find();
+    return posts;
+  }
 
-  // async getOne(req, res) {
-  //   try {
-  //     const { id } = req.params;
-  //     if (id) {
-  //       const post = await Post.findById(id);
-  //       return res.json(post);
-  //     } else if (!id) {
-  //       res.status(400).json({ message: 'ID is required' });
-  //     }
-  //   } catch (error) {
-  //     res.status(500).json(error.message);
-  //   }
-  // }
+  async getOne(id) {
+    if (id) {
+      const findedPost = await post.findById(id);
+      return findedPost;
+    } else if (!id) {
+      throw new Error('ID is required');
+    }
+  }
 
-  // async update(req, res) {
-  //   try {
-  //     const post = req.body;
-  //     if (post._id) {
-  //       const updatedPost = await Post.findByIdAndUpdate(post._id, post, { new: true });
-  //       return res.json(updatedPost);
-  //     } else if (!post._id) {
-  //       res.status(400).json({ message: 'ID is required' });
-  //     }
-  //   } catch (error) {
-  //     res.status(500).json(error.message);
-  //   }
-  // }
+  async update(newPost) {
+    if (newPost._id) {
+      const updatedPost = await post.findByIdAndUpdate(newPost._id, newPost, { new: true });
+      return updatedPost;
+    } else if (!newPost._id) {
+      throw new Error('ID is required');
+    }
+  }
 
-  // async delete(req, res) {
-  //   try {
-  //     const { id } = req.params;
-  //     if (id) {
-  //       const deletedPost = await Post.findByIdAndDelete(id);
-  //       return res.json(deletedPost);
-  //     } else if (!id) {
-  //       res.status(400).json({ message: 'ID is required' });
-  //     }
-  //   } catch (error) {
-  //     res.status(500).json(error.message);
-  //   }
-  // }
+  async delete(id) {
+    if (id) {
+      const deletedPost = await post.findByIdAndDelete(id);
+      return deletedPost;
+    } else if (!id) {
+      throw new Error('ID is required');
+    }
+  }
 };
 
 const postService = new PostService;

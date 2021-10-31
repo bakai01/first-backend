@@ -1,4 +1,3 @@
-import { post } from './Post.js';
 import { postService } from './PostService.js';
 
 class PostController {
@@ -13,7 +12,7 @@ class PostController {
 
   async getAll(req, res) {
     try {
-      const posts = await post.find();
+      const posts = await postService.getAll();
       return res.json(posts);
     } catch (error) {
       res.status(500).json(error.message);
@@ -22,13 +21,8 @@ class PostController {
 
   async getOne(req, res) {
     try {
-      const { id } = req.params;
-      if (id) {
-        const findedPost = await post.findById(id);
-        return res.json(findedPost);
-      } else if (!id) {
-        res.status(400).json({ message: 'ID is required' });
-      }
+      const findedPost = await postService.getOne(req.params.id);
+      return res.json(findedPost);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -36,13 +30,8 @@ class PostController {
 
   async update(req, res) {
     try {
-      const resPost = req.body;
-      if (resPost._id) {
-        const updatedPost = await post.findByIdAndUpdate(resPost._id, resPost, { new: true });
-        return res.json(updatedPost);
-      } else if (!resPost._id) {
-        res.status(400).json({ message: 'ID is required' });
-      }
+      const updatedPost = await postService.update(req.body);
+      return res.json(updatedPost);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -50,13 +39,8 @@ class PostController {
 
   async delete(req, res) {
     try {
-      const { id } = req.params;
-      if (id) {
-        const deletedPost = await post.findByIdAndDelete(id);
-        return res.json(deletedPost);
-      } else if (!id) {
-        res.status(400).json({ message: 'ID is required' });
-      }
+      const deletedPost = await postService.delete(req.params.id);
+      return res.json(deletedPost);
     } catch (error) {
       res.status(500).json(error.message);
     }
