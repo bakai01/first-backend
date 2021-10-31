@@ -1,10 +1,10 @@
-import Post from './Post.js';
+import { post } from './Post.js';
+import { postService } from './PostService.js';
 
 class PostController {
   async create(req, res) {
     try {
-      const { author, title, content, picture } = req.body;
-      const post = await Post.create({ author, title, content, picture });
+      const post = await postService.create(req.body);
       res.json(post);
     } catch (error) {
       res.status(500).json(error.message);
@@ -13,7 +13,7 @@ class PostController {
 
   async getAll(req, res) {
     try {
-      const posts = await Post.find();
+      const posts = await post.find();
       return res.json(posts);
     } catch (error) {
       res.status(500).json(error.message);
@@ -24,8 +24,8 @@ class PostController {
     try {
       const { id } = req.params;
       if (id) {
-        const post = await Post.findById(id);
-        return res.json(post);
+        const findedPost = await post.findById(id);
+        return res.json(findedPost);
       } else if (!id) {
         res.status(400).json({ message: 'ID is required' });
       }
@@ -36,11 +36,11 @@ class PostController {
 
   async update(req, res) {
     try {
-      const post = req.body;
-      if (post._id) {
-        const updatedPost = await Post.findByIdAndUpdate(post._id, post, { new: true });
+      const resPost = req.body;
+      if (resPost._id) {
+        const updatedPost = await post.findByIdAndUpdate(resPost._id, resPost, { new: true });
         return res.json(updatedPost);
-      } else if (!post._id) {
+      } else if (!resPost._id) {
         res.status(400).json({ message: 'ID is required' });
       }
     } catch (error) {
@@ -52,7 +52,7 @@ class PostController {
     try {
       const { id } = req.params;
       if (id) {
-        const deletedPost = await Post.findByIdAndDelete(id);
+        const deletedPost = await post.findByIdAndDelete(id);
         return res.json(deletedPost);
       } else if (!id) {
         res.status(400).json({ message: 'ID is required' });
@@ -63,4 +63,6 @@ class PostController {
   }
 };
 
-export default new PostController;
+const postController = new PostController;
+
+export { postController };
